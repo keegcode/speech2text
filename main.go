@@ -8,8 +8,8 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/upload", uploadFile)
+	mux.HandleFunc("/", Home)
+	mux.HandleFunc("/upload", UploadFile)
 
 	log.Print("Starting server on port 8000")
 	err := http.ListenAndServe(":8000", mux)
