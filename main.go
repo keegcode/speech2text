@@ -3,9 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/gofor-little/env"
 )
 
 func main() {
+	env.Load(".env")
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", Home)

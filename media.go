@@ -1,19 +1,8 @@
 package main
 
-import "errors"
-
-type FileType string
-
-const (
-	Video FileType = "video"
-	Audio FileType = "audio"
+import (
+	"errors"
 )
-
-type Media struct {
-	fileType FileType
-	size     int64
-	path     string
-}
 
 func (m Media) GenerateText() (string, error) {
 	switch m.fileType {
@@ -27,12 +16,12 @@ func (m Media) GenerateText() (string, error) {
 }
 
 func (m Media) processVideo() (string, error) {
-	media, err := m.extractAudioFromVideo()
+	audio, err := m.extractAudioFromVideo()
 	if err != nil {
 		return "", err
 	}
 
-	text, err := media.processAudio()
+	text, err := audio.processAudio()
 	if err != nil {
 		return "", err
 	}
@@ -45,5 +34,5 @@ func (m Media) extractAudioFromVideo() (Media, error) {
 }
 
 func (m Media) processAudio() (string, error) {
-	return "Sample text", nil
+	return m.recognizer.RecognizeTextInAudio(m)
 }

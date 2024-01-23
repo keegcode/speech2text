@@ -1,0 +1,4 @@
+github.com/gofor-little/env v1.0.16 h1:yj14eJdO/Sqpfj71kM0Ay2tL3oGzIKlIG+tfxCwuV1w=
+github.com/gofor-little/env v1.0.16/go.mod h1:AAAuPuOil4OPPX/TjtvZ5ecmg5ZSQDdLUFz22ZiWcSI=
+github.com/google/uuid v1.5.0 h1:1p67kYwdtXjb0gL0BPiP1Av9wiZPo5A8z2cWkTZ+eyU=
+github.com/google/uuid v1.5.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=

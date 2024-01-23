@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gofor-little/env"
 	"github.com/google/uuid"
 )
 
@@ -50,7 +51,13 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	media := Media{fileType: FileType(fileType), size: handler.Size, path: filePath}
+	language := r.URL.Query().Get("lang")
+	if language == "" {
+		language = "en"
+	}
+
+	recognizer := OpenAIRecognizer{apiKey: env.Get("OPENAI_API_KEY", "")}
+	media := Media{fileType: FileType(fileType), size: handler.Size, path: filePath, recognizer: recognizer, language: language}
 
 	text, err := media.GenerateText()
 	if err != nil {
