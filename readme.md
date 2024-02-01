@@ -1,1 +1,1 @@
-Just having fun and trying to learn more about AI and natural language processing
+Pet project to learn more about Golang and AI
