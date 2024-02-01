@@ -1,0 +1,1 @@
+Just having fun and trying to learn more about AI and natural language processing
