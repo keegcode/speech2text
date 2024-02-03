@@ -1,4 +1,4 @@
-package main
+package recognizer
 
 import (
 	"os/exec"
@@ -12,7 +12,7 @@ func (r LocalRecognizer) GetToken() string {
 }
 
 func (r LocalRecognizer) RecognizeTextInAudio(m Media) (string, error) {
-	args := []string{m.path, "--model", "small", "--output_format", "txt", "--language", m.language, "--task", "transcribe", "-o", "./output/"}
+	args := []string{m.Path, "--model", "small", "--output_format", "txt", "--language", m.Language, "--task", "transcribe", "-o", "./output/"}
 	out, err := exec.Command("whisper", args...).Output()
 	if err != nil {
 		return "", err

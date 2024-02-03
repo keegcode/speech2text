@@ -1,4 +1,4 @@
-package main
+package recognizer
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ func (r OpenAIRecognizer) GetToken() string {
 }
 
 func (r OpenAIRecognizer) RecognizeTextInAudio(m Media) (string, error) {
-	file, err := os.Open(m.path)
+	file, err := os.Open(m.Path)
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +30,7 @@ func (r OpenAIRecognizer) RecognizeTextInAudio(m Media) (string, error) {
 	buffer := new(bytes.Buffer)
 	writer := multipart.NewWriter(buffer)
 
-	part, err := writer.CreateFormFile("file", m.path)
+	part, err := writer.CreateFormFile("file", m.Path)
 	if err != nil {
 		return "", err
 	}
@@ -54,11 +54,11 @@ func (r OpenAIRecognizer) RecognizeTextInAudio(m Media) (string, error) {
 	}
 
 	req.Header.Set("Content-Type", writer.FormDataContentType())
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", m.recognizer.GetToken()))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", r.GetToken()))
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
-	log.Print(resp)
+
 	if err != nil {
 		return "", err
 	}
