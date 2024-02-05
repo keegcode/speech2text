@@ -82,6 +82,12 @@ func (app *application) UploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = os.Remove(audio.Path)
+	if err != nil {
+		http.Error(w, "Failed to remove the file!", http.StatusBadRequest)
+		return
+	}
+
 	w.Write([]byte(text))
 }
 

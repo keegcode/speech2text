@@ -30,10 +30,15 @@ func (m *Media) GetAudio() (*Media, error) {
 }
 
 func (m *Media) extractAudioFromVideo() (*Media, error) {
-	audioPath := fmt.Sprintf("%s.%s", strings.Split(m.Path, ".")[0], ".mp3")
+	audioPath := fmt.Sprintf("%s.%s", strings.Split(m.Path, ".")[0], "mp3")
 	args := []string{"-i", m.Path, "-q:a", "192", "-map", "a", audioPath}
 
 	err := exec.Command("ffmpeg", args...).Run()
+	if err != nil {
+		return nil, err
+	}
+
+	err = os.Remove(m.Path)
 	if err != nil {
 		return nil, err
 	}
