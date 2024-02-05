@@ -19,7 +19,7 @@ func (r OpenAIRecognizer) GetToken() string {
 	return r.apiKey
 }
 
-func (r OpenAIRecognizer) RecognizeTextInAudio(m Media) (string, error) {
+func (r OpenAIRecognizer) RecognizeTextInAudio(m *Media) (string, error) {
 	file, err := os.Open(m.Path)
 	if err != nil {
 		return "", err

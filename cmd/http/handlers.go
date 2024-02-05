@@ -70,8 +70,13 @@ func (app *application) UploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	media := recognizer.Media{FileType: recognizer.FileType(fileType), Size: handler.Size, Path: filePath, Language: language}
+	audio, err := media.GetAudio()
+	if err != nil {
+		http.Error(w, "Failed to extract the audio!", http.StatusBadRequest)
+		return
+	}
 
-	text, err := app.recognizer.RecognizeTextInAudio(media)
+	text, err := app.recognizer.RecognizeTextInAudio(audio)
 	if err != nil {
 		http.Error(w, "Failed to upload the file!", http.StatusBadRequest)
 		return
