@@ -11,65 +11,25 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-
 	"github.com/keegcode/speech2text/internal/recognizer"
 )
 
-const maxFileSizeMB = 25 << 20
-
-var allowedContentTypes = map[string]bool{
-	"audio/mpeg": true,
-	"audio/mp4":  true,
-	"video/mpeg": true,
-	"video/mp4":  true,
-	"audio/wav":  true,
-	"audio/webm": true,
-	"video/webm": true,
-}
-
 func (app *application) UploadFile(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed!", http.StatusMethodNotAllowed)
-		return
-	}
-
-	r.ParseMultipartForm(maxFileSizeMB)
-
-	file, handler, err := r.FormFile("media")
+	file, err := ProcessMultipart(w, r)
 	if err != nil {
-		log.Print(err)
-		http.Error(w, "Failed to upload the file!", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	defer file.Close()
-
-	log.Printf("Uploaded File: %+v\n", handler.Filename)
-	log.Printf("File Size: %+v\n", handler.Size)
-	log.Printf("MIME Header: %+v\n", handler.Header)
-
-	contentType := handler.Header.Get("Content-Type")
-
-	if !allowedContentTypes[contentType] {
-		http.Error(w, "Failed to upload the file!", http.StatusBadRequest)
-		return
-	}
+	path := file.Path
+	contentType := file.ContentType
+	size := file.Size
 
 	fileType := strings.Split(contentType, "/")[0]
-
-	filePath, err := writeFile(handler.Filename, file)
-	if err != nil {
-		log.Print(err)
-		http.Error(w, "Failed to upload the file!", http.StatusBadRequest)
-		return
-	}
-
 	language := r.URL.Query().Get("lang")
-	if language == "" {
-		language = "en"
-	}
 
-	media := recognizer.Media{FileType: recognizer.FileType(fileType), Size: handler.Size, Path: filePath, Language: language}
+	media := recognizer.Media{FileType: recognizer.FileType(fileType), Size: size, Path: path, Language: language}
+
 	audio, err := media.GetAudio()
 	if err != nil {
 		http.Error(w, "Failed to extract the audio!", http.StatusBadRequest)
