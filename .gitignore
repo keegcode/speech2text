@@ -1,3 +1,5 @@
 .env
 output
 github.com/keegcode/speech2text
+whisper.cpp
+http

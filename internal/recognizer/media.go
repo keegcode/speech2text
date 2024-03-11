@@ -22,17 +22,19 @@ type Media struct {
 }
 
 func (m *Media) GetAudio() (*Media, error) {
-	if m.FileType == Audio {
-		return m, nil
-	}
-
-	return m.extractAudioFromVideo()
+	return m.convertAudioToWAV()
 }
 
-func (m *Media) extractAudioFromVideo() (*Media, error) {
-	audioPath := fmt.Sprintf("%s.%s", strings.Split(m.Path, ".")[0], "mp3")
-	args := []string{"-i", m.Path, "-q:a", "192", "-map", "a", audioPath}
-
+func (m *Media) convertAudioToWAV() (*Media, error) {
+	audioPath := fmt.Sprintf("%s.%s", strings.Split(m.Path, ".")[0], "wav")
+	args := []string{
+    "-i", m.Path, 
+    "-c:a", "pcm_s16le", 
+    "-map", "a", 
+    "-ar", "16000", 
+    "-ac", "1", 
+    audioPath,
+  }
 	err := exec.Command("ffmpeg", args...).Run()
 	if err != nil {
 		return nil, err
